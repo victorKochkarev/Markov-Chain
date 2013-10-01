@@ -1,4 +1,4 @@
-function BigramNetwork(){
+BigramNetwork = function(){
     this.nodeList = [];
     this.cursor = null;
 }
@@ -19,10 +19,26 @@ BigramNetwork.prototype.getNodeByValue = function(value){
     return result;
 }
 
+BigramNetwork.prototype.buildNetworkUsingDataStringAndSeparator = function(dataString, separator){
+    var valueArray = dataString.split(separator);
+    this.buildNetworkUsingValueArray(valueArray);
+}
+
+BigramNetwork.prototype.buildNetworkUsingValueArray = function(valueArray){
+    for(var i = 0; i < valueArray.length; i++){
+        var aValue = valueArray[i];
+        if(this.cursor == null){
+            this.cursor = this.getNodeByValue(aValue);
+        }else{
+            this.cursor = this.cursor.addValueConnection(aValue);
+        }
+    }
+    //Returning cursor to the first node
+    this.cursor = this.nodeList[0];
+}
 
 
-
-function BigramNode(value, network){
+BigramNode = function(value, network){
     this.value = value;
     this.connectionList = [];
     this.totalConnectionWeight = 0;
@@ -71,11 +87,18 @@ BigramNode.prototype.getNextNode = function(){
 }
 
 
-function BigramConnection(node){
+BigramConnection = function(node){
     this.node = node;
     this.weight = 1;
 }
 
 BigramConnection.prototype.addWeight = function(){
     this.weight++;
+}
+
+
+module.exports = {
+    BigramNetwork: BigramNetwork,
+    BigramNode: BigramNode,
+    BigramConnection: BigramConnection
 }
